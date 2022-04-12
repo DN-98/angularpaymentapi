@@ -18,8 +18,9 @@ export class DashboardComponent implements OnChanges {
   isModal = false;
   modalState = '';
   paymentDetail : any = '';
-  paymentDetailBeforeFilter : any = '';
+  paymentFilter : any = '';
   targetItem: any = '';
+  isFilter: boolean = false;
 
   searchName = new FormControl('')
 
@@ -32,7 +33,7 @@ export class DashboardComponent implements OnChanges {
     this.isModal= val;
     this.modalState= '';
     this.targetItem = '';
-    this.updateState()
+    this.updateState();
     
   }
 
@@ -54,6 +55,7 @@ export class DashboardComponent implements OnChanges {
       confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
+        Swal.showLoading();
         this.payment.deletePaymentDetail(id).subscribe(val => {
           console.log(val);
           Swal.fire(
@@ -72,8 +74,12 @@ export class DashboardComponent implements OnChanges {
   }
 
   updateState = () => {
+    Swal.showLoading();
     this.payment.getPaymentDetailAll().subscribe(res => {
       this.paymentDetail = res
+      Swal.close()
+    }, err => {
+      console.log(err);
     })
   }
 
@@ -84,11 +90,11 @@ export class DashboardComponent implements OnChanges {
     
     this.searchName.valueChanges.subscribe(val => {
       if(val !== ''){
-        let reg = new RegExp(`${val}`) 
-        this.paymentDetail = this.paymentDetail.filter((a: any)=> reg.test(a.cardOwnerName));
-
+        this.isFilter = true;
+        let reg = new RegExp(`${val}`, 'i') 
+        this.paymentFilter = this.paymentDetail.filter((a: any)=> reg.test(a.cardOwnerName));
       } else {
-        this.updateState();
+        this.isFilter = false;
       }
     })
   }

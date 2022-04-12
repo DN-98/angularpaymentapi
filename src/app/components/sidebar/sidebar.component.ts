@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class SidebarComponent implements OnInit {
 
   handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("refreshToken");
   }
   constructor() { }
 

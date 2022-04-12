@@ -1,8 +1,10 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PaymentDetail } from 'src/app/models/paymentDetail';
+import Swal from 'sweetalert2';
 import { AuthManagementService } from '../auth/auth-management.service';
 
 @Injectable({
@@ -10,11 +12,12 @@ import { AuthManagementService } from '../auth/auth-management.service';
 })
 export class PaymentDetailService {
 
-  endpoint = `https://deah-payment-api.herokuapp.com/api`
+  endpoint = `https://deah-payment-api.herokuapp.com/api`;
+  // endpoint: string = `http://localhost:5000/api`;
   // headers = new HttpHeaders().set('Authorization', `Bearer ${this.auth.getAuthorizationToken()}`).set('Content-Type', 'appilcation/json')
   // headers = new HttpHeaders().set('Content-Type', 'appilcation/json')
   
-  constructor(private http: HttpClient, public auth: AuthManagementService) { }
+  constructor(private http: HttpClient, public auth: AuthManagementService, public router: Router) { }
 
   getPaymentDetailAll = () => {
     const api = `${this.endpoint}/PaymentDetail`
@@ -42,9 +45,16 @@ export class PaymentDetailService {
   }
 
   errorHandler = (err: HttpErrorResponse) => {
-    if(err.status < 500)
-      return throwError(err.error.message)
-    else
-    return throwError(`Server-side error code: ${err.status}\nMessage: ${err.message}`)
+    if(err.status === 401){
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("refreshToken");
+      this.router.navigate(['login']);
+      Swal.fire(
+        'Access not Allowed',
+        'Please login first . .',
+        'warning'
+      );
+    }
+    return throwError(err);
   }
 }

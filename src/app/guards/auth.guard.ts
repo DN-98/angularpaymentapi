@@ -21,8 +21,7 @@ export class AuthGuard implements CanActivate {
         'Access not Allowed',
         'Please login first . .',
         'warning'
-      )
-      
+      );
     }
     return true;
   }

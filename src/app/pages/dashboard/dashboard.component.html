@@ -19,7 +19,8 @@
                     <th class="w-2/6">Expiration Date</th>
                     <th class="w-2/6">Action</th>
                 </tr>
-                <tr *ngFor="let item of paymentDetail" class="divide-x hover:bg-gray-200">
+                <ng-container *ngIf="!isFilter">
+                <tr  *ngFor="let item of paymentDetail" class="divide-x hover:bg-gray-200">
                     <td class="p-2">{{item.paymentDetailId}}</td>
                     <td class="px-4 text-left">{{item.cardOwnerName}}</td>
                     <td>{{item.expirationDate.toLocaleString()}}</td>
@@ -28,6 +29,19 @@
                         <button (click)="handleClickDelete(item.paymentDetailId)" class="text-red-500 hover:opacity-50" ><fa-icon [icon]="faTrash" class="mx-2"></fa-icon></button>
                     </td>
                 </tr>
+                </ng-container>
+                
+                <ng-container *ngIf="isFilter">
+                <tr *ngFor="let item of paymentFilter" class="divide-x hover:bg-gray-200">
+                    <td class="p-2">{{item.paymentDetailId}}</td>
+                    <td class="px-4 text-left">{{item.cardOwnerName}}</td>
+                    <td>{{item.expirationDate.toLocaleString()}}</td>
+                    <td>
+                        <button (click)="handleClickEdit(item)" class="hover:opacity-50"><fa-icon [icon]="faEdit" class="mx-2"></fa-icon></button>
+                        <button (click)="handleClickDelete(item.paymentDetailId)" class="text-red-500 hover:opacity-50" ><fa-icon [icon]="faTrash" class="mx-2"></fa-icon></button>
+                    </td>
+                </tr>
+                </ng-container>
             </table>
         </div>
     </div>

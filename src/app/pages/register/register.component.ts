@@ -19,12 +19,14 @@ export class RegisterComponent implements OnInit {
   constructor(public auth: AuthManagementService, public router: Router) { }
 
   registerForm = new FormGroup({
-    username: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required, Validators.pattern(/^[a-z]+$/)]),
     email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required])
+    password: new FormControl('', [Validators.required, Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/)])
   });
 
   passStatus = 'Field Required';
+  userStatus = 'Field Required';
+  emailStatus = 'Field Required';
 
   get getPass(){
     return this.registerForm.get("password");
@@ -40,6 +42,7 @@ export class RegisterComponent implements OnInit {
 
   onRegister = () => {
     if(this.registerForm.valid){
+      Swal.showLoading();
       this.auth.register(this.registerForm.value).subscribe(
         res => 
         {
@@ -57,18 +60,39 @@ export class RegisterComponent implements OnInit {
             )
           }
         }, 
-        (err) => 
+        (err) =>
         {
+          console.log(err);
           Swal.fire({
             icon: 'error',
             title: 'Register Failed',
-            text: 'Parameters Invalid'
+            text: `${err.error.errors[0]}`
           });   
         });
     }
   }
 
   ngOnInit(): void {
+    this.registerForm.valueChanges.subscribe(val => {
+      if(this.registerForm.controls.password.invalid){
+        this.passStatus = 'Password must include:'
+        let regex = [/[0-9]/, /[a-z]/, /[A-Z]/, /\W/];
+        let status = [" 'number' ", " 'lowercase' ", " 'uppercase' ", " 'uniqe char' "]
+        
+        for(let i = 0; i < regex.length; ++i){
+          if(!regex[i].test(val.password)){
+            this.passStatus += status[i]
+          }
+        }
+      }
+      if(this.registerForm.controls.username){
+        this.userStatus = 'Username must lowercase without space'
+      }
+      if(this.registerForm.controls.email){
+        this.emailStatus = 'Email Invalid'
+      }
+
+    })
   }
 
 }
