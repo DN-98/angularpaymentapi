@@ -1,0 +1,31 @@
+<div class="z-10 bg-black bg-opacity-50 h-screen w-screen fixed inset-0">
+    <div class="flex w-full h-full justify-center items-center border">
+        <div class="w-1/2 h-fit bg-white p-8">
+            <form class="grid grid-rows-4 gap-4" [formGroup]="paymentForm" (ngSubmit)="onPaymentForm()">
+                <h1 *ngIf="isCreate" class="text-3xl text-gray-900 text-center">ADD NEW PAYMENT CARD</h1>
+                <h1 *ngIf="isEdit" class="text-3xl text-gray-900 text-center">EDIT PAYMENT CARD</h1>
+                <div class="flex flex-row w-full items-center px-4">
+                    <fa-icon class="flex-none w-14 rounded-l-lg block p-2 bg-gray-200 text-center" [icon]="faUser" ></fa-icon>
+                    <input formControlName="cardOwnerName" type="text" class="flex-grow p-2 border-gray-300 bg-gray-100 focus:outline-none  focus:text-gray-900 focus:bg-opacity-50" placeholder="Card Owner Name . .">
+                </div>
+                <div class="flex flex-row w-full items-center px-4">
+                    <fa-icon class="flex-none w-14 rounded-l-lg block p-2 bg-gray-200 text-center" [icon]="faLock" ></fa-icon>
+                    <input formControlName="securityCode" type="password" class="mr-2 flex-grow p-2 border-gray-300 bg-gray-100 focus:outline-none  focus:text-gray-900 focus:bg-opacity-50" placeholder="Security Code . .">
+                    <fa-icon class="ml-2 flex-none w-14 rounded-l-lg block p-2 bg-gray-200 text-center" [icon]="faCalendar" ></fa-icon>
+                    <input formControlName="expirationDate" type="date" class=" flex-grow p-2 border-gray-300 bg-gray-100 focus:outline-none  focus:text-gray-900 focus:bg-opacity-50" min="{{minDate}}" placeholder="Expiration Date . .">
+                </div>
+                <div class="flex flex-row w-full items-center px-4">
+                    <button (click)="cancelEdit()" class="text-xl w-1/2 p-2 bg-gray-200 text-black rounded-lg hover:bg-gray-400 mr-2">
+                        CANCEL
+                    </button>
+                    <button *ngIf="isEdit" type="submit" class="text-xl w-1/2 p-2 bg-black text-white rounded-lg hover:bg-opacity-80 ml-2">
+                        <fa-icon class="mx-4" [icon]="faSave"></fa-icon>SAVE
+                    </button>
+                    <button *ngIf="isCreate" type="submit" class="text-xl w-1/2 p-2 bg-black text-white rounded-lg hover:bg-opacity-80 ml-2">
+                        <fa-icon class="mx-4" [icon]="faCreditCard"></fa-icon>CREATE
+                    </button>    
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
